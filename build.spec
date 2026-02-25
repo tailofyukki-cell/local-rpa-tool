@@ -1,45 +1,49 @@
 # -*- mode: python ; coding: utf-8 -*-
+# LocalRPA - 画像マッチ特化型ローカルRPAツール
+# PyInstaller spec file (onefile mode)
 
-import sys
-from pathlib import Path
-
-from PyInstaller.utils.hooks import collect_data_files
-
-# --- PyInstaller設定 ---
-
-# ベースディレクトリ
-base_dir = Path(__file__).parent
-src_dir = base_dir / "src"
-
-# 実行ファイル名
-exe_name = "LocalRPA"
-
-# --- データファイルの収集 ---
-# PySide6のデータファイルを収集
-datas = collect_data_files("PySide6")
-
-# OpenCVのデータファイルを収集（Windows用）
-if sys.platform == "win32":
-    import cv2
-    opencv_dir = Path(cv2.__file__).parent
-    datas.append((str(opencv_dir / "data"), "cv2/data"))
-
-# --- EXEビルド設定 ---
+block_cipher = None
 
 a = Analysis(
-    [str(src_dir / "main.py")],
-    pathex=[str(base_dir)],
+    ['src/main.py'],
+    pathex=[SPECPATH],
     binaries=[],
-    datas=datas,
+    datas=[],
     hiddenimports=[
-        "PySide6.QtCore",
-        "PySide6.QtGui",
-        "PySide6.QtWidgets",
-        "PySide6.QtSvg",
-        "cv2",
-        "numpy",
-        "pyautogui",
-        "pywin32",
+        'PySide6.QtCore',
+        'PySide6.QtGui',
+        'PySide6.QtWidgets',
+        'PySide6.QtSvg',
+        'cv2',
+        'numpy',
+        'pyautogui',
+        'pyscreeze',
+        'PIL',
+        'PIL.Image',
+        'win32api',
+        'win32con',
+        'win32gui',
+        'src',
+        'src.core',
+        'src.core.context',
+        'src.core.action_base',
+        'src.core.dispatcher',
+        'src.core.engine',
+        'src.actions',
+        'src.actions.image_actions',
+        'src.actions.mouse_actions',
+        'src.actions.keyboard_actions',
+        'src.actions.wait_actions',
+        'src.actions.variable_actions',
+        'src.actions.condition_actions',
+        'src.actions.screen_actions',
+        'src.gui',
+        'src.gui.main_window',
+        'src.gui.flow_editor',
+        'src.gui.node_widget',
+        'src.gui.action_panel',
+        'src.gui.settings_panel',
+        'src.gui.log_panel',
     ],
     hookspath=[],
     hooksconfig={},
@@ -47,11 +51,11 @@ a = Analysis(
     excludes=[],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
-    cipher=None,
+    cipher=block_cipher,
     noarchive=False,
 )
 
-pyz = PYZ(a.pure, a.zipped_data, cipher=None)
+pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
 exe = EXE(
     pyz,
@@ -60,18 +64,18 @@ exe = EXE(
     a.zipfiles,
     a.datas,
     [],
-    name=exe_name,
+    name='LocalRPA',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=False,  # GUIアプリケーションなのでコンソールは非表示
+    console=False,
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=None,  # ここにアイコンファイルのパスを指定できます
+    icon=None,
 )
