@@ -1,0 +1,106 @@
+{
+  "name": "ボタン画像クリック→Enter送信",
+  "version": "1.0",
+  "description": "画面上のボタン画像を検索し、見つかったらクリックしてEnterキーを送信するサンプルフロー",
+  "actions": [
+    {
+      "id": "step_01",
+      "type": "variable.get_date",
+      "name": "実行日時取得",
+      "params": {
+        "format": "%Y%m%d_%H%M%S",
+        "var_name": "run_time"
+      },
+      "enabled": true
+    },
+    {
+      "id": "step_02",
+      "type": "wait.sleep",
+      "name": "初期待機（1秒）",
+      "params": {
+        "milliseconds": 1000
+      },
+      "enabled": true
+    },
+    {
+      "id": "step_03",
+      "type": "image.find",
+      "name": "OKボタン画像を検索",
+      "params": {
+        "template": "ok_button.png",
+        "confidence": 0.8,
+        "grayscale": false,
+        "region_x": 0,
+        "region_y": 0,
+        "region_w": 0,
+        "region_h": 0,
+        "var_x": "match_x",
+        "var_y": "match_y",
+        "var_found": "match_found"
+      },
+      "enabled": true
+    },
+    {
+      "id": "step_04",
+      "type": "condition.if",
+      "name": "ボタンが見つかったか？",
+      "params": {
+        "left": "{{match_found}}",
+        "operator": "=",
+        "right": "true"
+      },
+      "enabled": true
+    },
+    {
+      "id": "step_05",
+      "type": "image.click",
+      "name": "OKボタンをクリック",
+      "params": {
+        "template": "ok_button.png",
+        "confidence": 0.8,
+        "click_type": "left",
+        "offset_x": 0,
+        "offset_y": 0,
+        "clicks": 1
+      },
+      "enabled": true
+    },
+    {
+      "id": "step_06",
+      "type": "wait.sleep",
+      "name": "クリック後待機（500ms）",
+      "params": {
+        "milliseconds": 500
+      },
+      "enabled": true
+    },
+    {
+      "id": "step_07",
+      "type": "key.press",
+      "name": "Enterキー送信",
+      "params": {
+        "key": "enter",
+        "presses": 1,
+        "interval": 0.1
+      },
+      "enabled": true
+    },
+    {
+      "id": "step_08",
+      "type": "condition.endif",
+      "name": "ENDIF",
+      "params": {},
+      "enabled": true
+    },
+    {
+      "id": "step_09",
+      "type": "screen.screenshot",
+      "name": "完了後スクリーンショット",
+      "params": {
+        "filename": "result_{{run_time}}.png",
+        "var_path": "screenshot_path"
+      },
+      "enabled": true
+    }
+  ]
+}

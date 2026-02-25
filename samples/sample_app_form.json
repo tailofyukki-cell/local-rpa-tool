@@ -1,0 +1,159 @@
+{
+  "name": "アプリ起動→ロゴ待機→フォーム入力→保存",
+  "version": "1.0",
+  "description": "アプリを起動し、ロゴ画像の出現を待機してからフォームに入力・保存するサンプルフロー",
+  "actions": [
+    {
+      "id": "step_01",
+      "type": "variable.set",
+      "name": "入力データ設定",
+      "params": {
+        "name": "input_text",
+        "value": "テスト入力データ 2025"
+      },
+      "enabled": true
+    },
+    {
+      "id": "step_02",
+      "type": "variable.get_date",
+      "name": "実行日時取得",
+      "params": {
+        "format": "%Y年%m月%d日 %H:%M:%S",
+        "var_name": "current_datetime"
+      },
+      "enabled": true
+    },
+    {
+      "id": "step_03",
+      "type": "key.hotkey",
+      "name": "アプリ起動（Win+R）",
+      "params": {
+        "keys": "win,r"
+      },
+      "enabled": false
+    },
+    {
+      "id": "step_04",
+      "type": "wait.sleep",
+      "name": "アプリ起動待機（2秒）",
+      "params": {
+        "milliseconds": 2000
+      },
+      "enabled": true
+    },
+    {
+      "id": "step_05",
+      "type": "image.wait_appear",
+      "name": "アプリロゴ出現待機",
+      "params": {
+        "template": "app_logo.png",
+        "confidence": 0.75,
+        "timeout": 15.0,
+        "interval": 0.5,
+        "var_found": "logo_found"
+      },
+      "enabled": true
+    },
+    {
+      "id": "step_06",
+      "type": "condition.if",
+      "name": "ロゴが出現したか？",
+      "params": {
+        "left": "{{logo_found}}",
+        "operator": "=",
+        "right": "true"
+      },
+      "enabled": true
+    },
+    {
+      "id": "step_07",
+      "type": "wait.sleep",
+      "name": "ロゴ確認後待機（1秒）",
+      "params": {
+        "milliseconds": 1000
+      },
+      "enabled": true
+    },
+    {
+      "id": "step_08",
+      "type": "image.click",
+      "name": "入力フィールドをクリック",
+      "params": {
+        "template": "input_field.png",
+        "confidence": 0.8,
+        "click_type": "left",
+        "offset_x": 0,
+        "offset_y": 0,
+        "clicks": 1
+      },
+      "enabled": true
+    },
+    {
+      "id": "step_09",
+      "type": "key.hotkey",
+      "name": "フィールドを全選択",
+      "params": {
+        "keys": "ctrl,a"
+      },
+      "enabled": true
+    },
+    {
+      "id": "step_10",
+      "type": "key.type",
+      "name": "テキスト入力",
+      "params": {
+        "text": "{{input_text}}",
+        "interval": 0.05
+      },
+      "enabled": true
+    },
+    {
+      "id": "step_11",
+      "type": "wait.sleep",
+      "name": "入力後待機（500ms）",
+      "params": {
+        "milliseconds": 500
+      },
+      "enabled": true
+    },
+    {
+      "id": "step_12",
+      "type": "key.hotkey",
+      "name": "Ctrl+S で保存",
+      "params": {
+        "keys": "ctrl,s"
+      },
+      "enabled": true
+    },
+    {
+      "id": "step_13",
+      "type": "image.wait_disappear",
+      "name": "保存ダイアログ消滅待機",
+      "params": {
+        "template": "save_dialog.png",
+        "confidence": 0.8,
+        "timeout": 10.0,
+        "interval": 0.5,
+        "var_disappeared": "dialog_closed"
+      },
+      "enabled": true
+    },
+    {
+      "id": "step_14",
+      "type": "condition.endif",
+      "name": "ENDIF（ロゴ確認）",
+      "params": {},
+      "enabled": true
+    },
+    {
+      "id": "step_15",
+      "type": "screen.screenshot",
+      "name": "完了スクリーンショット",
+      "params": {
+        "filename": "form_complete_{{current_datetime}}.png",
+        "var_path": "final_screenshot"
+      },
+      "enabled": true
+    }
+  ]
+}
